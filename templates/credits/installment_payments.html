@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load currency %}
+
+{% block title %}Historial de Pagos{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Historial de Pagos - Cuota {{ installment.number }}</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'credits:credit_sale_detail' installment.credit_sale.id %}" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Cliente:</strong> {{ installment.credit_sale.customer.full_name }}</p>
+        <p><strong>Cuota:</strong> {{ installment.number }}/{{ installment.credit_sale.installments_count }}</p>
+        <p><strong>Monto de la cuota:</strong> {{ installment.amount|guarani }}</p>
+        <p><strong>Pagado:</strong> {{ installment.paid_amount|guarani }}</p>
+        <p><strong>Pendiente:</strong> {{ installment.pending_amount|guarani }}</p>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha de Pago</th>
+                <th>Monto</th>
+                <th>Registrado por</th>
+                <th>Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.paid_at|date:"d/m/Y" }}</td>
+                    <td>{{ payment.amount|guarani }}</td>
+                    <td>{{ payment.registered_by.get_full_name|default:payment.registered_by.username }}</td>
+                    <td>{{ payment.created_at|date:"d/m/Y H:i" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No hay pagos registrados</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

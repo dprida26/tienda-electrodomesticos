@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Desactivar Producto{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Desactivar Producto</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-warning">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p><strong>Marca/Modelo:</strong> {{ product.brand }} {{ product.model }}</p>
+                <p><strong>Stock Actual:</strong> {{ product.stock_quantity }} unidades</p>
+                <p class="text-muted">¿Estás seguro de que querés desactivar este producto?</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">Confirmar Desactivación</button>
+                    <a href="{% url 'inventory:product_list' %}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

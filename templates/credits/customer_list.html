@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load currency %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Clientes</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'credits:customer_create' %}" class="btn btn-success">+ Crear Cliente</a>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por nombre o documento..." value="{{ query }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Teléfono</th>
+                <th>Deuda Total</th>
+                <th>Vencidas</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.full_name }}</td>
+                    <td>{{ customer.document_number }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.total_credit_debt|guarani }}</td>
+                    <td>
+                        {% if customer.overdue_count > 0 %}
+                            <span class="badge bg-danger">{{ customer.overdue_count }}</span>
+                        {% else %}
+                            <span class="badge bg-success">0</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'credits:customer_detail' customer.id %}" class="btn btn-sm btn-info">Ver</a>
+                        <a href="{% url 'credits:customer_edit' customer.id %}" class="btn btn-sm btn-primary">Editar</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No hay clientes registrados</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

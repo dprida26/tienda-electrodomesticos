@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load currency %}
+
+{% block title %}Reporte - Mora{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Cuotas Vencidas (Mora)</h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Cuotas pendientes con fecha de vencimiento pasada</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Venta #</th>
+                    <th>Cuota</th>
+                    <th>Vencimiento</th>
+                    <th>Monto</th>
+                    <th>Pendiente</th>
+                    <th>Días Vencida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for installment in overdue_installments %}
+                    <tr class="table-danger">
+                        <td>{{ installment.credit_sale.customer.full_name }}</td>
+                        <td>#{{ installment.credit_sale.id }}</td>
+                        <td>{{ installment.number }}/{{ installment.credit_sale.installments_count }}</td>
+                        <td>{{ installment.due_date|date:"d/m/Y" }}</td>
+                        <td>{{ installment.amount|guarani }}</td>
+                        <td>{{ installment.pending_amount|guarani }}</td>
+                        <td>
+                            <span class="badge bg-danger">Vencida</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'credits:payment_register' installment.id %}" class="btn btn-sm btn-success">Registrar Pago</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No hay cuotas vencidas</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

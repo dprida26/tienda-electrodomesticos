@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load currency %}
+
+{% block title %}{{ customer.full_name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>{{ customer.full_name }}</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'credits:customer_edit' customer.id %}" class="btn btn-primary">Editar</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Información</h5>
+                <p><strong>Documento:</strong> {{ customer.document_number }}</p>
+                <p><strong>Teléfono:</strong> {{ customer.phone }}</p>
+                <p><strong>Dirección:</strong> {{ customer.address }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Resumen de Crédito</h5>
+                <p><strong>Deuda Total:</strong> <span class="h4">{{ customer.total_credit_debt|guarani }}</span></p>
+                <p><strong>Cuotas Vencidas:</strong> <span class="badge bg-danger">{{ customer.overdue_count }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Ventas a Crédito</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th>Cuotas</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.start_date|date:"d/m/Y" }}</td>
+                        <td>{{ sale.total_amount|guarani }}</td>
+                        <td>{{ sale.installments_count }}</td>
+                        <td>
+                            {% if sale.status == 'ACTIVE' %}
+                                <span class="badge bg-warning">Activa</span>
+                            {% elif sale.status == 'PAID' %}
+                                <span class="badge bg-success">Pagada</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Cancelada</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'credits:credit_sale_detail' sale.id %}" class="btn btn-sm btn-info">Ver</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay ventas a crédito</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Dashboard</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Stock</h5>
+                <p class="card-text">Gestión de productos e inventario</p>
+                <a href="/inventory/products/" class="btn btn-primary btn-sm">Ir a Productos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Créditos</h5>
+                <p class="card-text">Gestión de clientes y ventas a crédito</p>
+                <a href="/credits/customers/" class="btn btn-primary btn-sm">Ir a Clientes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Reportes</h5>
+                <p class="card-text">Consultar reportes de mora y bajo stock</p>
+                <a href="/reports/overdue/" class="btn btn-primary btn-sm">Ver Mora</a>
+                <a href="/reports/low-stock/" class="btn btn-primary btn-sm">Ver Bajo Stock</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
