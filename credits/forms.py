@@ -27,14 +27,14 @@ class CreditSaleForm(forms.ModelForm):
         fields = ('customer', 'total_amount', 'installments_count', 'start_date', 'status')
         labels = {
             'customer': 'Cliente',
-            'total_amount': 'Monto Total ($)',
+            'total_amount': 'Monto Total (Gs.)',
             'installments_count': 'Cantidad de Cuotas',
             'start_date': 'Fecha de Inicio',
             'status': 'Estado',
         }
         widgets = {
             'customer': forms.Select(attrs={'class': 'form-select'}),
-            'total_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'total_amount': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
             'installments_count': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '60'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
@@ -48,12 +48,12 @@ class CreditSaleItemForm(forms.ModelForm):
         labels = {
             'product': 'Producto',
             'quantity': 'Cantidad',
-            'unit_price': 'Precio Unitario ($)',
+            'unit_price': 'Precio Unitario (Gs.)',
         }
         widgets = {
             'product': forms.Select(attrs={'class': 'form-select'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
-            'unit_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'unit_price': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
         }
 
 
@@ -65,10 +65,10 @@ class PaymentForm(forms.ModelForm):
         model = Payment
         fields = ('amount', 'paid_at')
         labels = {
-            'amount': 'Monto Pagado ($)',
+            'amount': 'Monto Pagado (Gs.)',
             'paid_at': 'Fecha de Pago',
         }
         widgets = {
-            'amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'amount': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
             'paid_at': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
