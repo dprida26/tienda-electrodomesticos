@@ -8,6 +8,7 @@ from core.views import dashboard
 urlpatterns = [
     path('', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
     path('accounts/', include('accounts.urls')),
     path('inventory/', include('inventory.urls')),
     path('credits/', include('credits.urls')),
