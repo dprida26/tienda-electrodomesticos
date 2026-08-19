@@ -1,10 +1,23 @@
 from django.contrib import admin
-from .models import Product, ProductImage, StockMovement
+from .models import Product, ProductImage, StockMovement, ProductCategory
 
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
+
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'code')
+    fieldsets = (
+        ('Información', {
+            'fields': ('code', 'name', 'description', 'order', 'is_active')
+        }),
+    )
 
 
 @admin.register(Product)

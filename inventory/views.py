@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q
-from .models import Product, StockMovement
+from .models import Product, StockMovement, ProductCategory
 from .forms import ProductForm, StockMovementForm
 
 
@@ -12,13 +12,13 @@ def product_list(request):
     query = request.GET.get('q', '')
     category = request.GET.get('category', '')
 
-    products = Product.objects.all()
+    products = Product.objects.select_related('category').all()
     if query:
         products = products.filter(Q(name__icontains=query) | Q(brand__icontains=query))
     if category:
-        products = products.filter(category=category)
+        products = products.filter(category_id=category)
 
-    categories = Product.CATEGORY_CHOICES
+    categories = [(c.id, c.name) for c in ProductCategory.objects.filter(is_active=True)]
     return render(request, 'inventory/product_list.html', {
         'products': products,
         'categories': categories,

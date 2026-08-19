@@ -4,20 +4,25 @@ from django.conf import settings
 from core.models import TimeStampedModel
 
 
-class Product(TimeStampedModel):
-    CATEGORY_CHOICES = [
-        ('refrigerator', 'Refrigerador'),
-        ('oven', 'Horno'),
-        ('washer', 'Lavadora'),
-        ('dryer', 'Secadora'),
-        ('dishwasher', 'Lava Platos'),
-        ('microwave', 'Microondas'),
-        ('furniture', 'Muebles'),
-        ('other', 'Otro'),
-    ]
+class ProductCategory(TimeStampedModel):
+    code = models.CharField(max_length=50, unique=True, help_text='Código interno (ej: refrigerator)')
+    name = models.CharField(max_length=100, help_text='Nombre a mostrar (ej: Refrigerador)')
+    description = models.TextField(blank=True)
+    order = models.PositiveIntegerField(default=0, help_text='Orden en listas')
+    is_active = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = 'Categoría de Producto'
+        verbose_name_plural = 'Categorías de Productos'
+        ordering = ('order', 'name')
+
+    def __str__(self):
+        return self.name
+
+
+class Product(TimeStampedModel):
     name = models.CharField(max_length=255)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT, related_name='products')
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     description = models.TextField(blank=True)
