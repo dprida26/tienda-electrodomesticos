@@ -1,0 +1,128 @@
+📦 agente-notificaciones-diarias/
+│
+├── 📚 DOCUMENTACIÓN
+│   ├── START_HERE.txt              ⭐ Lee esto primero
+│   ├── QUICKSTART.md               ⚡ Setup en 5 minutos
+│   ├── SETUP.md                    📋 Guía detallada
+│   ├── README.md                   📖 Documentación completa
+│   ├── RESUMEN_PROYECTO.md         ✨ Resumen de lo creado
+│   ├── PROJECT_SUMMARY.md          🎓 Resumen técnico
+│   ├── PROJECT_STRUCTURE.md        📁 Estructura del código
+│   ├── EXTENSION.md                🔧 Cómo extender
+│   ├── INDEX.md                    📑 Índice de docs
+│   └── STRUCTURE.txt               🌳 Este archivo
+│
+├── 🔧 CONFIGURACIÓN
+│   ├── package.json                📦 Dependencias
+│   ├── tsconfig.json               ⚙️  TypeScript config
+│   ├── .env.example                🔑 Plantilla de variables
+│   ├── .gitignore                  🙈 Archivos ignorados
+│   ├── Dockerfile                  🐳 Docker config
+│   └── docker-compose.yml          🐳 Docker Compose
+│
+├── 💻 CÓDIGO FUENTE (src/)
+│   ├── index.ts                    🚀 Punto de entrada
+│   │
+│   ├── agent/
+│   │   └── index.ts                🤖 Orquestador principal
+│   │
+│   ├── config/
+│   │   └── env.ts                  ⚙️  Validación de entorno
+│   │
+│   ├── services/
+│   │   ├── gmail.service.ts        📧 Gmail API
+│   │   ├── linkedin.service.ts     💼 LinkedIn API
+│   │   └── report.service.ts       📄 Generación PDF
+│   │
+│   ├── scheduler/
+│   │   └── daily-task.ts           📅 Tareas programadas
+│   │
+│   ├── types/
+│   │   └── index.ts                📝 Interfaces TypeScript
+│   │
+│   └── utils/
+│       └── logger.ts               📢 Sistema de logging
+│
+├── 📂 CARPETAS RUNTIME (generadas)
+│   ├── reports/                    📄 PDFs generados
+│   ├── dist/                       🔨 Código compilado
+│   └── node_modules/               📚 Dependencias instaladas
+│
+└── 📄 ARCHIVOS RAÍZ
+    ├── package-lock.json           📌 Lock de versiones
+    ├── gmail-token.json            🔐 Token de Gmail (generado)
+    └── .env                        🔑 Variables de entorno (crear)
+
+
+═══════════════════════════════════════════════════════════════════════
+
+📊 RESUMEN DE ARCHIVOS
+
+Documentación:     10 archivos
+Configuración:      6 archivos  
+Código:            10 archivos
+─────────────────────────────
+TOTAL:             26 archivos
+Tamaño:           ~136 KB
+
+═══════════════════════════════════════════════════════════════════════
+
+🎯 RUTAS IMPORTANTES
+
+Código principal:    src/
+Servicios:          src/services/
+Configuración:      .env (crear desde .env.example)
+Reportes:          ./reports/ (se crea automáticamente)
+Dependencias:      node_modules/ (crear con npm install)
+
+═══════════════════════════════════════════════════════════════════════
+
+🚀 QUICK START
+
+1. npm install
+2. cp .env.example .env
+3. Edita .env con tus credenciales
+4. npm run dev
+5. ¡Listo! PDF en ./reports/
+
+═══════════════════════════════════════════════════════════════════════
+
+📚 ¿QUÉ LEER PRIMERO?
+
+⭐ START_HERE.txt              Guía visual (empieza aquí)
+⚡ QUICKSTART.md               Setup rápido
+📋 SETUP.md                    Instrucciones detalladas
+🎓 PROJECT_SUMMARY.md          Detalles técnicos
+
+═══════════════════════════════════════════════════════════════════════
+
+🔧 DEPENDENCIAS PRINCIPALES
+
+typescript          Lenguaje principal
+googleapis          API de Gmail
+axios               Cliente HTTP
+node-schedule       Programación de tareas
+pdfkit              Generación de PDFs
+zod                 Validación de datos
+dotenv              Variables de entorno
+
+═══════════════════════════════════════════════════════════════════════
+
+💡 CARACTERÍSTICAS
+
+✅ Lectura automática de Gmail
+✅ Captura de notificaciones LinkedIn
+✅ Generación de reportes PDF
+✅ Ejecución diaria programable
+✅ OAuth2 authentication
+✅ Docker ready
+✅ TypeScript 100%
+✅ Fully documented
+
+═══════════════════════════════════════════════════════════════════════
+
+🎊 ¡Proyecto Creado Exitosamente!
+
+Tu agente está listo. Lee START_HERE.txt para comenzar.
+
+═══════════════════════════════════════════════════════════════════════

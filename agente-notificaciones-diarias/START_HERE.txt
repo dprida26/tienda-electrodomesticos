@@ -1,0 +1,109 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              🤖 AGENTE DE NOTIFICACIONES DIARIAS - START HERE 🤖           ║
+║                                                                            ║
+║                                                                            ║
+║  Bienvenido al Agente de Notificaciones Diarias.                          ║
+║  Este agente lee automáticamente tus correos y notificaciones de LinkedIn  ║
+║  y genera un reporte PDF diario.                                          ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  📋 ELIGE TU RUTA SEGÚN TUS NECESIDADES:                                  ║
+║                                                                            ║
+║  1️⃣  "Quiero empezar RÁPIDO (5 minutos)"                                  ║
+║     ► Abre: QUICKSTART.md                                                 ║
+║                                                                            ║
+║  2️⃣  "Necesito INSTRUCCIONES DETALLADAS"                                  ║
+║     ► Abre: SETUP.md                                                      ║
+║                                                                            ║
+║  3️⃣  "Quiero entender TODO sobre el proyecto"                             ║
+║     ► Abre: README.md                                                     ║
+║     ► Luego: PROJECT_SUMMARY.md                                           ║
+║                                                                            ║
+║  4️⃣  "¿Cómo extiendo/modifico el agente?"                                 ║
+║     ► Abre: EXTENSION.md                                                  ║
+║                                                                            ║
+║  5️⃣  "Necesito VER la estructura del código"                              ║
+║     ► Abre: PROJECT_STRUCTURE.md                                          ║
+║                                                                            ║
+║  6️⃣  "¿Dónde encuentro documentación?"                                    ║
+║     ► Abre: INDEX.md                                                      ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  🚀 PRIMEROS PASOS (Resumido):                                            ║
+║                                                                            ║
+║  1. npm install                                                           ║
+║  2. cp .env.example .env                                                  ║
+║  3. Edita .env con tus credenciales (ver QUICKSTART.md)                   ║
+║  4. npm run dev                                                           ║
+║  5. ¡Listo! Tu reporte está en ./reports/                                ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  📚 ARCHIVOS IMPORTANTES:                                                 ║
+║                                                                            ║
+║  • QUICKSTART.md        → Empieza aquí si tienes prisa                   ║
+║  • SETUP.md             → Instrucciones paso a paso completas            ║
+║  • README.md            → Documentación principal del proyecto           ║
+║  • PROJECT_SUMMARY.md   → Resumen técnico y arquitectura                ║
+║  • EXTENSION.md         → Cómo agregar nuevas funcionalidades            ║
+║  • PROJECT_STRUCTURE.md → Estructura del código                          ║
+║  • INDEX.md             → Índice de toda la documentación                ║
+║  • .env.example         → Plantilla de variables de entorno              ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  ⚡ QUICK FACTS:                                                          ║
+║                                                                            ║
+║  ✅ Lenguaje: TypeScript                                                  ║
+║  ✅ Runtime: Node.js 18+                                                  ║
+║  ✅ Plataformas: Gmail + LinkedIn                                         ║
+║  ✅ Reportes: PDF automático                                              ║
+║  ✅ Frecuencia: Diaria (programable)                                      ║
+║  ✅ Extensible: Fácil agregar nuevas funcionalidades                      ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  🔧 REQUISITOS:                                                           ║
+║                                                                            ║
+║  • Node.js 18 o superior                                                  ║
+║  • npm o yarn                                                             ║
+║  • Credenciales de Google (OAuth2)                                        ║
+║  • Credenciales de LinkedIn                                              ║
+║  • Conexión a internet                                                    ║
+║                                                                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  💡 CONSEJO:                                                              ║
+║                                                                            ║
+║  Si es tu primera vez, lee QUICKSTART.md primero. Tiene todo lo que      ║
+║  necesitas en 5 minutos. Si necesitas más detalle, luego lees SETUP.md   ║
+║                                                                            ║
+║  ¡Buena suerte! 🚀                                                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+─────────────────────────────────────────────────────────────────────────────
+
+🎯 RUTA MÁS RÁPIDA (para gente ocupada):
+
+  $ npm install
+  $ cp .env.example .env
+  # Edita .env con tus datos
+  $ npm run dev
+  
+  ✅ PDF generado en ./reports/
+
+─────────────────────────────────────────────────────────────────────────────
+
+📞 AYUDA:
+
+  Documentación: INDEX.md
+  Setup rápido: QUICKSTART.md
+  Setup completo: SETUP.md
+  Problemas: README.md (sección Troubleshooting)
+
+─────────────────────────────────────────────────────────────────────────────
