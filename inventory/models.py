@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from core.models import TimeStampedModel
 
@@ -26,10 +26,47 @@ class Product(TimeStampedModel):
     brand = models.CharField(max_length=100)
     model = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    price = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        help_text='Precio al contado'
+    )
+    installment_interest_rate = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=15.00,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text='Tasa de interés para compras en cuotas (en porcentaje, ej: 15 = 15%)'
+    )
+    installment_options = models.CharField(
+        max_length=100,
+        default='1,3,6,9,12,18,24',
+        blank=True,
+        help_text='Opciones de cuotas disponibles (separadas por coma, ej: 1,3,6,9,12,18,24)'
+    )
     stock_quantity = models.PositiveIntegerField(default=0)
     min_stock_quantity = models.PositiveIntegerField(default=5)
     is_active = models.BooleanField(default=True)
+    is_on_sale = models.BooleanField(default=False, help_text='Marcar si el producto está en oferta')
+    sale_price = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)],
+        help_text='Precio de oferta (dejar vacío si no hay oferta)'
+    )
+    offer_start_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text='Fecha y hora de inicio de la oferta'
+    )
+    offer_end_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text='Fecha y hora de fin de la oferta'
+    )
 
     class Meta:
         verbose_name = 'Producto'
@@ -46,6 +83,33 @@ class Product(TimeStampedModel):
     @property
     def is_low_stock(self):
         return self.stock_quantity <= self.min_stock_quantity
+
+    @property
+    def discount_percentage(self):
+        if self.is_on_sale and self.sale_price and self.price:
+            discount = ((self.price - self.sale_price) / self.price) * 100
+            return int(discount)
+        return 0
+
+    @property
+    def is_offer_active(self):
+        from django.utils import timezone
+        if not self.is_on_sale:
+            return False
+        now = timezone.now()
+        if self.offer_start_date and now < self.offer_start_date:
+            return False
+        if self.offer_end_date and now > self.offer_end_date:
+            return False
+        return True
+
+    def get_installment_options_list(self):
+        if not self.installment_options:
+            return []
+        try:
+            return [int(x.strip()) for x in self.installment_options.split(',')]
+        except (ValueError, AttributeError):
+            return []
 
 
 class ProductImage(TimeStampedModel):

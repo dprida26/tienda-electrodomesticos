@@ -33,11 +33,17 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductListSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)
     first_image = serializers.SerializerMethodField()
+    installment_options_list = serializers.SerializerMethodField()
+    discount_percentage = serializers.ReadOnlyField()
+    is_offer_active = serializers.ReadOnlyField()
+    price = serializers.DecimalField(max_digits=15, decimal_places=2)
+    installment_interest_rate = serializers.DecimalField(max_digits=5, decimal_places=2)
+    sale_price = serializers.DecimalField(max_digits=15, decimal_places=2, allow_null=True, required=False)
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'category', 'category_name', 'brand', 'model', 'price',
-                  'stock_quantity', 'is_active', 'first_image')
+        fields = ('id', 'name', 'category', 'category_name', 'brand', 'model', 'price', 'sale_price',
+                  'installment_interest_rate', 'installment_options', 'installment_options_list', 'stock_quantity', 'is_active', 'is_on_sale', 'discount_percentage', 'is_offer_active', 'offer_start_date', 'offer_end_date', 'first_image')
 
     def get_first_image(self, obj):
         first_image = obj.images.first()
@@ -50,18 +56,39 @@ class ProductListSerializer(serializers.ModelSerializer):
                 return url
         return None
 
+    def get_installment_options_list(self, obj):
+        return obj.get_installment_options_list()
+
 
 class ProductDetailSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True)
-    price_display = serializers.SerializerMethodField()
+    first_image = serializers.SerializerMethodField()
+    installment_options_list = serializers.SerializerMethodField()
+    discount_percentage = serializers.ReadOnlyField()
+    is_offer_active = serializers.ReadOnlyField()
+    price = serializers.DecimalField(max_digits=15, decimal_places=2)
+    installment_interest_rate = serializers.DecimalField(max_digits=5, decimal_places=2)
+    sale_price = serializers.DecimalField(max_digits=15, decimal_places=2, allow_null=True, required=False)
 
     class Meta:
         model = Product
         fields = ('id', 'name', 'category', 'brand', 'model', 'description',
-                  'price', 'price_display', 'stock_quantity', 'min_stock_quantity',
-                  'is_active', 'is_low_stock', 'images', 'created_at', 'updated_at')
+                  'price', 'sale_price', 'installment_interest_rate', 'installment_options',
+                  'installment_options_list', 'stock_quantity', 'min_stock_quantity',
+                  'is_active', 'is_on_sale', 'discount_percentage', 'is_offer_active', 'offer_start_date', 'offer_end_date', 'is_low_stock', 'images', 'first_image', 'created_at', 'updated_at')
         read_only_fields = ('created_at', 'updated_at', 'is_low_stock')
 
-    def get_price_display(self, obj):
-        return f"Gs. {obj.price:,.2f}".replace(',', '.')
+    def get_first_image(self, obj):
+        first_image = obj.images.first()
+        if first_image:
+            request = self.context.get('request')
+            if first_image.image and hasattr(first_image.image, 'url'):
+                url = first_image.image.url
+                if request is not None:
+                    return request.build_absolute_uri(url)
+                return url
+        return None
+
+    def get_installment_options_list(self, obj):
+        return obj.get_installment_options_list()

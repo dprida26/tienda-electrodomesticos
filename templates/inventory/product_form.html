@@ -39,6 +39,18 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
+                            {{ form.installment_interest_rate.label_tag }}
+                            {{ form.installment_interest_rate }}
+                            {% if form.installment_interest_rate.errors %}<div class="invalid-feedback d-block">{{ form.installment_interest_rate.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.installment_options.label_tag }}
+                            {{ form.installment_options }}
+                            {% if form.installment_options.errors %}<div class="invalid-feedback d-block">{{ form.installment_options.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
                             {{ form.brand.label_tag }}
                             {{ form.brand }}
                             {% if form.brand.errors %}<div class="invalid-feedback d-block">{{ form.brand.errors }}</div>{% endif %}
@@ -66,6 +78,32 @@
                             {% if form.min_stock_quantity.errors %}<div class="invalid-feedback d-block">{{ form.min_stock_quantity.errors }}</div>{% endif %}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                {{ form.is_on_sale }}
+                                {{ form.is_on_sale.label_tag }}
+                            </div>
+                            {% if form.is_on_sale.errors %}<div class="invalid-feedback d-block">{{ form.is_on_sale.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.sale_price.label_tag }}
+                            {{ form.sale_price }}
+                            {% if form.sale_price.errors %}<div class="invalid-feedback d-block">{{ form.sale_price.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.offer_start_date.label_tag }}
+                            {{ form.offer_start_date }}
+                            {% if form.offer_start_date.errors %}<div class="invalid-feedback d-block">{{ form.offer_start_date.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.offer_end_date.label_tag }}
+                            {{ form.offer_end_date }}
+                            {% if form.offer_end_date.errors %}<div class="invalid-feedback d-block">{{ form.offer_end_date.errors }}</div>{% endif %}
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <div class="form-check">
                             {{ form.is_active }}
@@ -73,6 +111,56 @@
                         </div>
                         {% if form.is_active.errors %}<div class="invalid-feedback d-block">{{ form.is_active.errors }}</div>{% endif %}
                     </div>
+
+                    {# Sección de imágenes #}
+                    <hr>
+                    <h5 class="mb-3">📸 Imágenes del Producto</h5>
+
+                    {# Imágenes actuales (solo si el producto existe) #}
+                    {% if product %}
+                    {% if product.images.all %}
+                    <div class="mb-4">
+                        <p class="text-muted mb-3">Imágenes actuales:</p>
+                        <div class="row" id="current-images">
+                            {% for image in product.images.all %}
+                            <div class="col-md-3 mb-3">
+                                <div class="card">
+                                    <img src="{{ image.image.url }}" class="card-img-top" alt="Imagen {{ image.order }}" style="height: 150px; object-fit: cover;">
+                                    <div class="card-body">
+                                        <small class="text-muted">Orden: {{ image.order }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="alert alert-info mb-4">
+                        <small>💡 Guarda el producto primero para poder subir imágenes.</small>
+                    </div>
+                    {% endif %}
+
+                    {# Agregar nuevas imágenes #}
+                    {% if product %}
+                    <div class="mb-4">
+                        <label for="images" class="form-label">Añadir nuevas imágenes:</label>
+                        <div class="input-group">
+                            <input type="file" id="images" class="form-control" accept="image/*" multiple>
+                            <button class="btn btn-primary" type="button" id="upload-images-btn">Cargar Imágenes</button>
+                        </div>
+                        <small class="text-muted d-block mt-2">💡 Puedes seleccionar múltiples archivos.</small>
+                    </div>
+
+                    {# Indicador de carga #}
+                    <div id="upload-progress" class="d-none mb-3">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <span class="ms-2">Cargando imágenes...</span>
+                    </div>
+                    {% endif %}
+
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <a href="{% url 'inventory:product_list' %}" class="btn btn-secondary">Cancelar</a>
                 </form>
@@ -80,4 +168,48 @@
         </div>
     </div>
 </div>
+
+<script>
+    {% if product %}
+    document.getElementById('upload-images-btn')?.addEventListener('click', async function() {
+        const fileInput = document.getElementById('images');
+        const files = fileInput.files;
+
+        if (files.length === 0) {
+            alert('Por favor selecciona al menos una imagen');
+            return;
+        }
+
+        const formData = new FormData();
+        for (let file of files) {
+            formData.append('images', file);
+        }
+
+        const uploadProgress = document.getElementById('upload-progress');
+        uploadProgress.classList.remove('d-none');
+
+        try {
+            const response = await fetch('{% url "inventory:product_upload_images" product.pk %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+
+            if (response.ok) {
+                // Recargar la página para ver las nuevas imágenes
+                location.reload();
+            } else {
+                alert('Error al cargar las imágenes');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al cargar las imágenes: ' + error.message);
+        } finally {
+            uploadProgress.classList.add('d-none');
+        }
+    });
+    {% endif %}
+</script>
 {% endblock %}
