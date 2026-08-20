@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
-from django.db.models import Q
-from .models import Product, StockMovement, ProductCategory
+from django.db.models import Q, Max
+from django.http import JsonResponse
+from .models import Product, StockMovement, ProductCategory, ProductImage
 from .forms import ProductForm, StockMovementForm
 
 
@@ -69,6 +70,41 @@ def product_delete(request, pk):
         return redirect('inventory:product_list')
 
     return render(request, 'inventory/product_confirm_delete.html', {'product': product})
+
+
+@login_required
+@require_http_methods(['POST'])
+def product_upload_images(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if 'images' not in request.FILES:
+        return JsonResponse({'error': 'No se proporcionaron imágenes'}, status=400)
+
+    images = request.FILES.getlist('images')
+    uploaded_count = 0
+    errors = []
+
+    # Obtener el número máximo de orden actual
+    max_order = ProductImage.objects.filter(product=product).aggregate(
+        max_order=Max('order')
+    )['max_order'] or -1
+
+    for idx, image_file in enumerate(images):
+        try:
+            ProductImage.objects.create(
+                product=product,
+                image=image_file,
+                order=max_order + idx + 1
+            )
+            uploaded_count += 1
+        except Exception as e:
+            errors.append(f'Error al subir imagen {idx + 1}: {str(e)}')
+
+    return JsonResponse({
+        'success': True,
+        'uploaded_count': uploaded_count,
+        'errors': errors
+    })
 
 
 @login_required

@@ -22,7 +22,7 @@ class ProductFilter(FilterSet):
 
     class Meta:
         model = Product
-        fields = ['category_id', 'is_active', 'price_min', 'price_max', 'brand']
+        fields = ['category_id', 'is_active', 'is_on_sale', 'price_min', 'price_max', 'brand']
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):

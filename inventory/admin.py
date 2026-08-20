@@ -22,13 +22,17 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'brand', 'model', 'price', 'stock_quantity', 'min_stock_quantity', 'is_active', 'is_low_stock')
+    list_display = ('name', 'brand', 'model', 'price', 'installment_interest_rate', 'stock_quantity', 'min_stock_quantity', 'is_active', 'is_low_stock')
     list_filter = ('category', 'is_active', 'brand')
     search_fields = ('name', 'brand', 'model')
     inlines = [ProductImageInline]
     fieldsets = (
         ('Información Básica', {
-            'fields': ('name', 'category', 'brand', 'model', 'description', 'price')
+            'fields': ('name', 'category', 'brand', 'model', 'description')
+        }),
+        ('Precios y Financiamiento', {
+            'fields': ('price', 'installment_interest_rate'),
+            'description': 'Precio al contado y tasa de interés para compras en cuotas'
         }),
         ('Stock', {
             'fields': ('stock_quantity', 'min_stock_quantity')

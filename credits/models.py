@@ -1,9 +1,53 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.utils import timezone
 from core.models import TimeStampedModel
 from inventory.models import Product
+
+
+class CreditConfiguration(models.Model):
+    """Configuración global de créditos e instalaciones"""
+    interest_rate = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=15.00,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text='Tasa de interés en porcentaje (ej: 15 = 15%)'
+    )
+    min_installments = models.PositiveIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text='Mínimo de cuotas permitidas'
+    )
+    max_installments = models.PositiveIntegerField(
+        default=24,
+        validators=[MinValueValidator(1)],
+        help_text='Máximo de cuotas permitidas'
+    )
+    installment_options = models.CharField(
+        max_length=255,
+        default='1,3,6,9,12,18,24',
+        help_text='Opciones rápidas de cuotas separadas por coma (ej: 1,3,6,12,24)'
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Configuración de Créditos'
+        verbose_name_plural = 'Configuración de Créditos'
+
+    def __str__(self):
+        return f"Configuración de Créditos ({self.interest_rate}%)"
+
+    @classmethod
+    def get_config(cls):
+        """Obtiene o crea la configuración por defecto"""
+        config, _ = cls.objects.get_or_create(pk=1)
+        return config
+
+    def get_installment_options_list(self):
+        """Convierte las opciones de cuotas a lista de números"""
+        return [int(x.strip()) for x in self.installment_options.split(',') if x.strip()]
 
 
 class Customer(TimeStampedModel):

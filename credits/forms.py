@@ -1,6 +1,31 @@
 from django import forms
 from django.forms import inlineformset_factory
+from decimal import Decimal
 from .models import Customer, CreditSale, CreditSaleItem, Payment
+
+
+class CurrencyField(forms.DecimalField):
+    """Campo decimal que acepta números con separadores de miles (. o ,)"""
+
+    def to_python(self, value):
+        if not value:
+            return None
+        # Convertir a string si es necesario
+        value = str(value).strip()
+        # Remover espacios
+        value = value.replace(' ', '')
+        # Si usa punto como separador de miles y coma como decimal (formato europeo)
+        if ',' in value and value.rfind(',') > value.rfind('.'):
+            value = value.replace('.', '').replace(',', '.')
+        # Si usa coma como separador de miles (formato latino)
+        elif ',' in value:
+            value = value.replace(',', '')
+        # Si usa punto como separador de miles y no hay coma
+        elif value.count('.') > 1:
+            value = value.replace('.', '')
+        # Limpiar punto final si quedó
+        value = value.strip('.')
+        return super().to_python(value)
 
 
 class CustomerForm(forms.ModelForm):
@@ -22,6 +47,17 @@ class CustomerForm(forms.ModelForm):
 
 
 class CreditSaleForm(forms.ModelForm):
+    total_amount = CurrencyField(
+        label='Monto Total (Gs.)',
+        decimal_places=2,
+        max_digits=12,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control price-input',
+            'placeholder': 'ej: 1.500.000 o 1500000',
+            'inputmode': 'numeric'
+        })
+    )
+
     class Meta:
         model = CreditSale
         fields = ('customer', 'total_amount', 'installments_count', 'start_date', 'status')
@@ -34,7 +70,6 @@ class CreditSaleForm(forms.ModelForm):
         }
         widgets = {
             'customer': forms.Select(attrs={'class': 'form-select'}),
-            'total_amount': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
             'installments_count': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '60'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
@@ -42,6 +77,17 @@ class CreditSaleForm(forms.ModelForm):
 
 
 class CreditSaleItemForm(forms.ModelForm):
+    unit_price = CurrencyField(
+        label='Precio Unitario (Gs.)',
+        decimal_places=2,
+        max_digits=10,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control price-input',
+            'placeholder': 'ej: 1.500.000 o 1500000',
+            'inputmode': 'numeric'
+        })
+    )
+
     class Meta:
         model = CreditSaleItem
         fields = ('product', 'quantity', 'unit_price')
@@ -53,7 +99,6 @@ class CreditSaleItemForm(forms.ModelForm):
         widgets = {
             'product': forms.Select(attrs={'class': 'form-select'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
-            'unit_price': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
         }
 
 
@@ -61,6 +106,17 @@ CreditSaleItemFormSet = inlineformset_factory(CreditSale, CreditSaleItem, form=C
 
 
 class PaymentForm(forms.ModelForm):
+    amount = CurrencyField(
+        label='Monto Pagado (Gs.)',
+        decimal_places=2,
+        max_digits=12,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control price-input',
+            'placeholder': 'ej: 500.000 o 500000',
+            'inputmode': 'numeric'
+        })
+    )
+
     class Meta:
         model = Payment
         fields = ('amount', 'paid_at')
@@ -69,6 +125,5 @@ class PaymentForm(forms.ModelForm):
             'paid_at': 'Fecha de Pago',
         }
         widgets = {
-            'amount': forms.NumberInput(attrs={'class': 'form-control price-input', 'step': '0.01', 'min': '0'}),
             'paid_at': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }

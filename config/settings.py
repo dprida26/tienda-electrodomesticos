@@ -64,9 +64,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
-    'default': env.db(
-        default='postgresql://tienda_user:tienda_pass@db:5432/tienda_db'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -130,8 +131,10 @@ REST_FRAMEWORK = {
 # CORS Configuration - permitir Next.js y localhost
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://localhost:8000',
     'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
     'http://127.0.0.1:8000',
 ]
 

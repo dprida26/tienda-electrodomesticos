@@ -3,9 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.db.models import Q, Sum
-from .models import Customer, CreditSale, Installment, Payment
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status as rest_status
+from .models import Customer, CreditSale, Installment, Payment, CreditConfiguration
 from .forms import CustomerForm, CreditSaleForm, CreditSaleItemFormSet, PaymentForm
 from .services import generate_installment_schedule
+from .serializers import CreditConfigurationSerializer
 from inventory.models import StockMovement
 
 
@@ -126,3 +130,12 @@ def installment_payments(request, installment_id):
         'installment': installment,
         'payments': payments,
     })
+
+
+class CreditConfigurationAPIView(APIView):
+    """API para obtener la configuración de créditos"""
+
+    def get(self, request):
+        config = CreditConfiguration.get_config()
+        serializer = CreditConfigurationSerializer(config)
+        return Response(serializer.data)

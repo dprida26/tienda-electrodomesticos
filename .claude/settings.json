@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py makemigrations inventory)",
+      "Bash(curl -s \"http://localhost:8000/api/v1/products/1/\")",
+      "Bash(python -m json.tool)",
+      "PowerShell(netstat -ano)",
+      "Bash(curl -s \"http://localhost:8000/api/v1/products/\")"
+    ]
+  }
+}

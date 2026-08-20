@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, CreditSale, CreditSaleItem, Installment, Payment
+from .models import Customer, CreditSale, CreditSaleItem, Installment, Payment, CreditConfiguration
 
 
 @admin.register(Customer)
@@ -37,3 +37,28 @@ class PaymentAdmin(admin.ModelAdmin):
     list_filter = ('paid_at',)
     search_fields = ('installment__credit_sale__customer__full_name',)
     readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(CreditConfiguration)
+class CreditConfigurationAdmin(admin.ModelAdmin):
+    list_display = ('interest_rate', 'min_installments', 'max_installments', 'updated_at')
+    readonly_fields = ('updated_at',)
+    fieldsets = (
+        ('Configuración General', {
+            'fields': ('interest_rate', 'min_installments', 'max_installments')
+        }),
+        ('Opciones de Cuotas', {
+            'fields': ('installment_options',),
+            'description': 'Ingrese las opciones separadas por coma (ej: 1,3,6,12,24)'
+        }),
+        ('Información', {
+            'fields': ('updated_at',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not CreditConfiguration.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
