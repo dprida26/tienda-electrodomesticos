@@ -16,10 +16,6 @@ services:
         value: "*.onrender.com,localhost,127.0.0.1"
       - key: CORS_ALLOWED_ORIGINS
         value: "https://*.onrender.com,http://localhost:3000,http://localhost:3001"
-      - key: DATABASE_URL
-        fromDatabase:
-          name: tienda-db
-          property: connectionString
       - key: SECURE_SSL_REDIRECT
         value: "True"
       - key: SESSION_COOKIE_SECURE
