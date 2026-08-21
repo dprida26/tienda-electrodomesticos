@@ -72,8 +72,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 db_url = os.environ.get('DATABASE_URL')
 
+print(f"\n{'='*80}")
+print(f"DATABASE CONFIGURATION")
+print(f"DATABASE_URL present: {bool(db_url)}")
+print(f"is_render: {is_render}")
+print(f"is_production: {is_production}")
 if db_url:
-    DATABASES = {'default': dj_database_url.config()}
+    print(f"DATABASE_URL (first 60 chars): {db_url[:60]}...")
+print(f"{'='*80}\n")
+
+if db_url:
+    DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
 else:
     DATABASES = {
         'default': {
