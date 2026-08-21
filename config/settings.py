@@ -71,24 +71,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 db_url = os.environ.get('DATABASE_URL')
-print(f"\n{'='*80}")
-print(f"SETTINGS.PY DATABASE_URL: {db_url[:60] if db_url else 'NOT SET'}...")
-print(f"{'='*80}\n")
 
 if db_url:
-    try:
-        DATABASES = {'default': dj_database_url.config(default=db_url)}
-        print(f"✓ Database config parsed from DATABASE_URL")
-    except Exception as e:
-        print(f"✗ Error parsing DATABASE_URL: {e}")
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
-        }
+    DATABASES = {'default': dj_database_url.config()}
 else:
-    print("⚠ DATABASE_URL not set, using SQLite")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
