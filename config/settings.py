@@ -3,15 +3,15 @@ from pathlib import Path
 import environ
 from urllib.parse import urlparse
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env_file = os.path.join(BASE_DIR, '.env')
 if os.path.exists(env_file):
     environ.Env.read_env(env_file)
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 SECRET_KEY = env('SECRET_KEY', default='dev-insecure-key')
 DEBUG = env('DEBUG')
@@ -67,13 +67,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASE_URL = env('DATABASE_URL', default=None) or os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
-print(f"DEBUG: DATABASE_URL = {DATABASE_URL[:50]}..." if DATABASE_URL else "DEBUG: DATABASE_URL is empty")
+DATABASE_URL = os.environ.get('DATABASE_URL')
+print(f"=== DEBUG DATABASE_URL: {DATABASE_URL[:80] if DATABASE_URL else 'NOT SET'}... ===")
 
-if DATABASE_URL.startswith('postgres://'):
-    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+if DATABASE_URL and 'postgresql' in DATABASE_URL:
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
-if 'postgresql' in DATABASE_URL:
     parsed = urlparse(DATABASE_URL)
     DATABASES = {
         'default': {
