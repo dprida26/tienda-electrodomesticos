@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              🤖 GLPI BOT 24/7 - ¡OPERATIVO EN TELEGRAM!                   ║
+║                                                                            ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+ESTADO ACTUAL: ✅ CORRIENDO 24/7 EN TELEGRAM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+El bot está escuchando mensajes en el grupo de Telegram "Soporte GLPI AMSA"
+y responde consultas sobre tickets de GLPI en tiempo real.
+
+Bot en Telegram: @glpi_soporte_amsa_bot
+
+
+CÓMO USAR EL BOT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Abre Telegram y accede al grupo "Soporte GLPI AMSA"
+
+1. COMANDOS DISPONIBLES:
+
+   /start
+   → Muestra menú de ayuda y opciones
+
+   /tickets
+   → Lista todos los tickets activos (@amsa.com.py, mes actual)
+
+   /resumen
+   → Estadísticas de tickets por prioridad
+
+   /ayuda
+   → Muestra todos los comandos disponibles
+
+
+2. PREGUNTAS NATURALES (sin necesidad de escribir comandos):
+
+   Escribe cosas como:
+   • "Muéstrame los tickets"
+   • "Hay algún problema?"
+   • "Qué soporte tengo"
+   • "Necesito info de GLPI"
+
+   El bot entiende y responde automáticamente
+
+
+GESTIONAR EL BOT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+INICIAR MANUALMENTE:
+  cd "C:\Users\Administrador\Desktop\AMSA\Personal\Proyectos IA\GLPI-Agent"
+  python bot_24_7.py
+
+
+VER LOGS EN TIEMPO REAL:
+  Get-Content "C:\Users\Administrador\Desktop\AMSA\Personal\Proyectos IA\GLPI-Agent\logs\bot_24_7.log" -Wait -Tail 20
+
+
+DETENER EL BOT:
+  Get-Process python | Where-Object { $_.CommandLine -like "*bot_24_7*" } | Stop-Process
+
+
+REINICIAR EL BOT:
+  1. Stop-Process -Name python -Force
+  2. Start-Sleep -Seconds 2
+  3. python bot_24_7.py
+
+
+AUTO-ARRANQUE AL INICIAR WINDOWS:
+  La tarea programada "GLPIBot24-7" está instalada y se ejecuta automáticamente.
+
+  Para gestionar:
+  1. Abre: Programador de Tareas (taskschd.msc)
+  2. Busca: GLPIBot24-7
+  3. Click derecho: Propiedades, Ejecutar, Deshabilitar, etc.
+
+
+ARCHIVOS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 BOT_OPERATIVO_24_7.md
+   Guía completa con ejemplos y troubleshooting
+
+📄 bot_24_7.py
+   Código principal del bot
+
+📄 .env
+   Credenciales (NO COMPARTIR)
+
+📁 logs/
+   bot_24_7.log → Logs del bot en ejecución
+   bot_restart.log → Logs de reinicio automático
+
+
+TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ El bot no responde:
+   1. Verifica que esté corriendo: Get-Process python
+   2. Revisa logs: Get-Content logs\bot_24_7.log -Tail 30
+   3. Reinicia: Stop-Process -Name python; Start-Sleep 2; python bot_24_7.py
+
+❌ Error de token de Telegram:
+   → El token en .env debe ser válido
+   → Ejecuta: python test_bot_interactive.py (para validar configuración)
+
+❌ Error de conexión a GLPI:
+   → Verifica credenciales en .env
+   → Comprueba: https://soporte.promed.com.py
+   → Prueba: python main.py --test-glpi
+
+
+ESTADÍSTICAS ACTUALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Total de tickets en GLPI:      177
+Tickets activos (@amsa.com.py): 21
+Período:                        Mayo 2026
+Dominio filtrado:              @amsa.com.py
+Categoría:                      Soporte Tecnico
+Horario de actualización:       Cada consulta (tiempo real)
+
+
+VERSIÓN Y FECHA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Bot 24/7 v1.0
+Instalado: 2026-05-18
+Estado: ✅ OPERATIVO
+Modo: Polling (escucha constante)
+
+
+PRÓXIMOS PASOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ Bot instalado y corriendo
+2. ⏳ Prueba enviando un mensaje al grupo de Telegram
+3. ✅ Verifica que el bot responda correctamente
+4. ✅ El bot continuará corriendo 24/7 automáticamente
+
+
+¿PREGUNTAS?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Lee el archivo: BOT_OPERATIVO_24_7.md (guía completa)
+
+═══════════════════════════════════════════════════════════════════════════════

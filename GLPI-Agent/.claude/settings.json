@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd \"C:\\\\Users\\\\Administrador\\\\Desktop\\\\AMSA\\\\Personal\\\\Proyectos IA\\\\GLPI-Agent\"; $env:PYTHONIOENCODING='utf-8'; python telegram_bot_interactive.py)",
+      "Bash(Get-ChildItem -Force)",
+      "PowerShell(cd \"C:\\\\Users\\\\Administrador\\\\Desktop\\\\AMSA\\\\Personal\\\\Proyectos IA\\\\GLPI-Agent\"; powershell -ExecutionPolicy Bypass -File install_bot_service.ps1)",
+      "PowerShell(cd \"C:\\\\Users\\\\Administrador\\\\Desktop\\\\AMSA\\\\Personal\\\\Proyectos IA\\\\GLPI-Agent\"; powershell -ExecutionPolicy Bypass -File install_bot_service_clean.ps1)",
+      "PowerShell(Start-ScheduledTask -TaskName \"GLPIBot24-7\")",
+      "PowerShell(Get-ScheduledTask -TaskName \"GLPIBot24-7\")",
+      "PowerShell(cd \"C:\\\\Users\\\\Administrador\\\\Desktop\\\\AMSA\\\\Personal\\\\Proyectos IA\\\\GLPI-Agent\"; Start-Process powershell -ArgumentList \"-ExecutionPolicy Bypass -File run_bot_with_restart.ps1\" -NoNewWindow -PassThru)",
+      "PowerShell(Stop-Process -Name powershell -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; cd \"C:\\\\Users\\\\Administrador\\\\Desktop\\\\AMSA\\\\Personal\\\\Proyectos IA\\\\GLPI-Agent\"; Start-Process powershell -ArgumentList \"-ExecutionPolicy Bypass -File start_bot_24_7.ps1\" -NoNewWindow -PassThru)",
+      "PowerShell(Stop-Process -Force)"
+    ]
+  }
+}

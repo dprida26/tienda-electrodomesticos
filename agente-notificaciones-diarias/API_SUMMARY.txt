@@ -1,0 +1,189 @@
+════════════════════════════════════════════════════════════════════════════
+                     NUEVA FUNCIONALIDAD: API REST
+                  Tu Agente Ahora Puede Ser Llamado
+════════════════════════════════════════════════════════════════════════════
+
+LO NUEVO:
+
+✅ Servidor Express en puerto 3000
+✅ 11 endpoints REST para todos los servicios
+✅ Cliente SDK TypeScript incluido
+✅ Sistema de eventos entre agentes
+✅ Webhooks para ejecución asincrónica
+✅ Documentación automática en /api/docs
+
+════════════════════════════════════════════════════════════════════════════
+
+ARCHIVOS AGREGADOS:
+
+1. src/api/server.ts          Servidor Express con 11 endpoints
+2. src/sdk/client.ts          SDK TypeScript para otros agentes
+3. API_INTEGRATION.md         Documentación técnica completa
+4. API_README.md              Resumen y visión general
+5. EXAMPLES.md                10 ejemplos prácticos listos
+6. API_SUMMARY.txt            Este archivo
+
+════════════════════════════════════════════════════════════════════════════
+
+COMO FUNCIONA:
+
+1. npm start                  ← Inicia agente + API
+2. Otros agentes llaman:      http://localhost:3000/api/v1/*
+3. Reciben respuesta JSON     ← Datos procesados
+
+════════════════════════════════════════════════════════════════════════════
+
+11 ENDPOINTS DISPONIBLES:
+
+GET  /health                           Verificar que está activo
+GET  /api/v1/status                    Estado del agente
+POST /api/v1/reports/generate          Generar reporte hoy
+POST /api/v1/reports/generate-range    Reporte (rango de fechas)
+GET  /api/v1/emails?days=N             Obtener correos
+GET  /api/v1/linkedin/notif?days=N     Obtener LinkedIn
+GET  /api/v1/reports                   Listar reportes
+GET  /api/v1/reports/:filename         Descargar PDF
+POST /api/v1/reports/gen-with-callback Generar con webhook
+POST /api/v1/events                    Sistema de eventos
+GET  /api/docs                         Documentación JSON
+
+════════════════════════════════════════════════════════════════════════════
+
+USO DESDE OTRO AGENTE (JavaScript):
+
+const { NotificationsAgentClient } = require('./sdk/client');
+const client = new NotificationsAgentClient('http://localhost:3000');
+
+// Generar reporte
+const result = await client.generateReport();
+
+// Obtener correos
+const emails = await client.getEmails(7);
+
+// Obtener LinkedIn
+const notifications = await client.getLinkedInNotifications(7);
+
+════════════════════════════════════════════════════════════════════════════
+
+CASOS DE USO:
+
+Orquestador: Coordina múltiples agentes
+Alertas: Sistema que alerta sobre correos importantes
+Dashboard: Web que muestra datos en vivo
+Worker: Job que genera reportes periódicamente
+Monitor: Agente que verifica salud de otros
+Pipeline: Procesa emails de forma automática
+Webhook: Notificaciones asincrónicas
+
+════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTACION:
+
+• API_README.md           ← Comienza aquí (visión general)
+• API_INTEGRATION.md      ← Referencia técnica completa
+• EXAMPLES.md             ← 10 ejemplos prácticos
+• /api/docs               ← Documentación automática en JSON
+
+════════════════════════════════════════════════════════════════════════════
+
+FLUJOS SOPORTADOS:
+
+1. DIRECTO (Síncrono)
+   Agente A → POST /reports/generate → Respuesta JSON
+
+2. WEBHOOK (Asincrónico)
+   Agente A → POST /gen-with-callback → taskId
+   Agente A espera webhook cuando esté listo
+
+3. EVENTOS (Pubsub)
+   Agente A → POST /events (GENERATE_REPORT) → Respuesta
+
+════════════════════════════════════════════════════════════════════════════
+
+QUICK START:
+
+npm start
+# Servidor en http://localhost:3000
+
+curl http://localhost:3000/health
+# {"status":"ok","timestamp":"..."}
+
+curl -X POST http://localhost:3000/api/v1/reports/generate
+# {"success":true,"reportPath":"./reports/..."}
+
+════════════════════════════════════════════════════════════════════════════
+
+SEGURIDAD:
+
+✅ Validación de inputs (Zod)
+✅ Manejo robusto de errores
+✅ Path traversal protection
+✅ Timeouts en requests
+⏳ TODO: JWT authentication
+⏳ TODO: Rate limiting
+
+════════════════════════════════════════════════════════════════════════════
+
+AHORA PUEDES:
+
+✅ Llamar al agente desde otros programas
+✅ Generar reportes bajo demanda
+✅ Obtener datos sin generar PDF
+✅ Coordinar múltiples agentes
+✅ Crear sistemas de alertas
+✅ Construir dashboards web
+✅ Automatizar flujos complejos
+✅ Recibir webhooks cuando se completan tareas
+
+════════════════════════════════════════════════════════════════════════════
+
+ANTES vs DESPUÉS:
+
+ANTES:  Tu Agente → (local) → Genera reportes
+
+AHORA:  Tu Agente ↔ API REST ↔ Otros Agentes
+        - Dashboard Web
+        - Sistema de Alertas
+        - Orquestador Central
+        - Worker Jobs
+        - Integraciones Externas
+
+════════════════════════════════════════════════════════════════════════════
+
+PROXIMOS PASOS:
+
+1. Lee API_README.md          (Visión general rápida)
+2. Lee API_INTEGRATION.md     (Referencia técnica)
+3. Lee EXAMPLES.md            (Copia ejemplos)
+4. Copia el SDK client.ts     (Usa en tus agentes)
+5. ¡Integra con otros agentes!
+
+════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTACION:
+
+/api/docs                     ← API docs en JSON
+API_README.md                 ← Overview (empeza aquí)
+API_INTEGRATION.md            ← Documentación completa
+EXAMPLES.md                   ← 10 ejemplos prácticos
+src/sdk/client.ts            ← Cliente TypeScript
+
+════════════════════════════════════════════════════════════════════════════
+
+SOPORTE:
+
+❓ ¿Cómo genero un reporte desde otro agente?
+   → Ver EXAMPLES.md sección 1-3
+
+❓ ¿Cómo recibo notificaciones (webhooks)?
+   → Ver EXAMPLES.md sección 5
+
+❓ ¿Cómo creo un dashboard web?
+   → Ver EXAMPLES.md sección 8
+
+❓ ¿Cuál es la referencia completa de la API?
+   → Ver API_INTEGRATION.md
+
+════════════════════════════════════════════════════════════════════════════
+
+¡Tu agente ahora es parte de un ecosistema colaborativo! 🚀
