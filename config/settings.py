@@ -9,7 +9,9 @@ env = environ.Env(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 SECRET_KEY = env('SECRET_KEY', default='dev-insecure-key')
 DEBUG = env('DEBUG')
@@ -65,7 +67,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASE_URL = env('DATABASE_URL', default='sqlite:///db.sqlite3')
+DATABASE_URL = env('DATABASE_URL', default=None) or os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
 print(f"DEBUG: DATABASE_URL = {DATABASE_URL[:50]}..." if DATABASE_URL else "DEBUG: DATABASE_URL is empty")
 
 if DATABASE_URL.startswith('postgres://'):
