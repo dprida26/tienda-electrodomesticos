@@ -8,6 +8,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
+# DEBUG: Print all environment variables
+import sys
+print("\n" + "="*100, file=sys.stderr)
+print(f"DJANGO STARTUP - All Environment Variables:", file=sys.stderr)
+print("="*100, file=sys.stderr)
+for key in sorted(os.environ.keys()):
+    value = os.environ[key]
+    if 'SECRET' in key or 'PASSWORD' in key or 'KEY' in key:
+        print(f"  {key}: ***REDACTED***", file=sys.stderr)
+    else:
+        if len(value) > 100:
+            print(f"  {key}: {value[:100]}...", file=sys.stderr)
+        else:
+            print(f"  {key}: {value}", file=sys.stderr)
+print("="*100, file=sys.stderr)
+print(f"DATABASE_URL present: {bool(os.environ.get('DATABASE_URL'))}", file=sys.stderr)
+print("="*100 + "\n", file=sys.stderr)
+
 # CRITICAL: Never read .env in Render or production
 env_file = os.path.join(BASE_DIR, '.env')
 if os.path.exists(env_file) and not is_production and not is_render:
