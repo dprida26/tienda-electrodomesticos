@@ -8,9 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
-# Guardar DATABASE_URL de Render ANTES de leer .env
-render_database_url = os.environ.get('DATABASE_URL')
-
 env_file = os.path.join(BASE_DIR, '.env')
 if os.path.exists(env_file) and not is_production:
     environ.Env.read_env(env_file)
@@ -18,10 +15,6 @@ if os.path.exists(env_file) and not is_production:
 env = environ.Env(
     DEBUG=(bool, False)
 )
-
-# Restaurar DATABASE_URL de Render si existe
-if render_database_url:
-    os.environ['DATABASE_URL'] = render_database_url
 
 SECRET_KEY = env('SECRET_KEY', default='dev-insecure-key')
 DEBUG = env('DEBUG')
@@ -77,26 +70,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-db_url = os.environ.get('DATABASE_URL')
+# Database configuration
+if is_production:
+    # In Render, always use dj-database-url with DATABASE_URL
+    db_url = os.environ.get('DATABASE_URL')
+    print(f"\n{'='*80}")
+    print(f"PRODUCTION MODE (Render)")
+    print(f"DATABASE_URL present: {bool(db_url)}")
+    if db_url:
+        print(f"DATABASE_URL (first 60 chars): {db_url[:60]}...")
+    print(f"{'='*80}\n")
 
-print(f"\n{'='*80}")
-print(f"DATABASE CONFIGURATION")
-print(f"DATABASE_URL present: {bool(db_url)}")
-print(f"is_render: {is_render}")
-print(f"is_production: {is_production}")
-if db_url:
-    print(f"DATABASE_URL (first 60 chars): {db_url[:60]}...")
-print(f"{'='*80}\n")
-
-if db_url:
-    DATABASES = {'default': dj_database_url.config(conn_max_age=600)}
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    if db_url:
+        DATABASES = {'default': dj_database_url.config(conn_max_age=600, conn_health_checks=True)}
+    else:
+        # Fallback to SQLite if DATABASE_URL is not set
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
         }
-    }
+else:
+    # Development: try .env first, then SQLite
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url:
+        DATABASES = {'default': dj_database_url.config()}
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            }
+        }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
