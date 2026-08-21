@@ -144,8 +144,9 @@ if db_url:
             }
         }
 else:
-    # Fallback to SQLite
-    print("[DB] DATABASE_URL not found, using SQLite")
+    # Fallback to SQLite (this happens on Render when DATABASE_URL is not injected)
+    print("[DB] DATABASE_URL not found, using SQLite as fallback")
+    print("[DB] NOTE: This is likely Render not injecting DATABASE_URL. Check dashboard Environment vars.")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
