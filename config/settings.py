@@ -8,9 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
+# CRITICAL: Never read .env in Render or production
 env_file = os.path.join(BASE_DIR, '.env')
-if os.path.exists(env_file) and not is_production:
+if os.path.exists(env_file) and not is_production and not is_render:
     environ.Env.read_env(env_file)
+    print(f"[Django] Loaded .env from {env_file}")
 
 env = environ.Env(
     DEBUG=(bool, False)
