@@ -8,6 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
+# Guardar DATABASE_URL de Render ANTES de leer .env
+render_database_url = os.environ.get('DATABASE_URL')
+
 env_file = os.path.join(BASE_DIR, '.env')
 if os.path.exists(env_file) and not is_production:
     environ.Env.read_env(env_file)
@@ -15,6 +18,10 @@ if os.path.exists(env_file) and not is_production:
 env = environ.Env(
     DEBUG=(bool, False)
 )
+
+# Restaurar DATABASE_URL de Render si existe
+if render_database_url:
+    os.environ['DATABASE_URL'] = render_database_url
 
 SECRET_KEY = env('SECRET_KEY', default='dev-insecure-key')
 DEBUG = env('DEBUG')
