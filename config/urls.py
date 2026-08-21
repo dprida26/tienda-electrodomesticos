@@ -3,24 +3,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from core.views import dashboard
-import os
-from pathlib import Path
-
-@csrf_exempt
-def debug_env_view(request):
-    """Return the debug environment log file"""
-    log_path = os.path.join(Path(__file__).resolve().parent.parent, 'django_startup_debug.log')
-    if os.path.exists(log_path):
-        with open(log_path, 'r') as f:
-            content = f.read()
-        return HttpResponse(content, content_type='text/plain')
-    return HttpResponse("Debug log not found", status=404)
 
 urlpatterns = [
-    path('debug/env/', debug_env_view, name='debug_env'),
     path('', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
