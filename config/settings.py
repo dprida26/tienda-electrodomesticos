@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import environ
 import dj_database_url
@@ -8,7 +9,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
-# DEBUG: Write environment variables to a log file
+# DEBUG: Write environment variables IMMEDIATELY and to stderr
+sys.stderr.write("\n" + "="*100 + "\n")
+sys.stderr.write("DJANGO STARTUP - CRITICAL DEBUG INFO\n")
+sys.stderr.write("="*100 + "\n")
+sys.stderr.write(f"DATABASE_URL in os.environ: {bool(os.environ.get('DATABASE_URL'))}\n")
+sys.stderr.write(f"RENDER in os.environ: {bool(os.environ.get('RENDER'))}\n")
+sys.stderr.write(f"is_render: {is_render}\n")
+sys.stderr.write(f"is_production: {is_production}\n")
+
+db_url = os.environ.get('DATABASE_URL')
+if db_url:
+    sys.stderr.write(f"DATABASE_URL (first 80 chars): {db_url[:80]}\n")
+else:
+    sys.stderr.write("WARNING: DATABASE_URL is NOT SET!\n")
+    sys.stderr.write(f"Available env keys: {', '.join(sorted(os.environ.keys())[:15])}\n")
+sys.stderr.write("="*100 + "\n\n")
+sys.stderr.flush()
+
+# Also write to file for inspection
 debug_log_path = os.path.join(BASE_DIR, 'django_startup_debug.log')
 try:
     with open(debug_log_path, 'w') as f:
@@ -30,7 +49,8 @@ try:
         f.write(f"is_production: {is_production}\n")
         f.write("="*100 + "\n")
 except Exception as e:
-    pass  # Silent fail if we can't write the log
+    sys.stderr.write(f"Failed to write debug log: {e}\n")
+    sys.stderr.flush()
 
 # CRITICAL: Never read .env in Render or production
 env_file = os.path.join(BASE_DIR, '.env')
