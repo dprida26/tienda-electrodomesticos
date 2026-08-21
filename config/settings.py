@@ -66,6 +66,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASE_URL = env('DATABASE_URL', default='sqlite:///db.sqlite3')
+print(f"DEBUG: DATABASE_URL = {DATABASE_URL[:50]}..." if DATABASE_URL else "DEBUG: DATABASE_URL is empty")
 
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
