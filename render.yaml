@@ -3,13 +3,13 @@ services:
     name: tienda-electrodomesticos-api
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
-    startCommand: gunicorn config.wsgi:application
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    startCommand: gunicorn -c gunicorn_config.py config.wsgi:application
     envVars:
       - key: DEBUG
         value: "False"
       - key: PYTHON_VERSION
-        value: "3.11"
+        value: "3.11.0"
       - key: SECRET_KEY
         sync: false
       - key: ALLOWED_HOSTS
@@ -26,6 +26,10 @@ services:
         value: "True"
       - key: CSRF_COOKIE_SECURE
         value: "True"
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+      - key: PYTHONUNBUFFERED
+        value: "1"
 
   - type: pserv
     name: tienda-db
