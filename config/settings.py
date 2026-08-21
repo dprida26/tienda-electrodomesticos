@@ -8,23 +8,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 is_render = 'RENDER' in os.environ
 is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
 
-# DEBUG: Print all environment variables
-import sys
-print("\n" + "="*100, file=sys.stderr)
-print(f"DJANGO STARTUP - All Environment Variables:", file=sys.stderr)
-print("="*100, file=sys.stderr)
-for key in sorted(os.environ.keys()):
-    value = os.environ[key]
-    if 'SECRET' in key or 'PASSWORD' in key or 'KEY' in key:
-        print(f"  {key}: ***REDACTED***", file=sys.stderr)
-    else:
-        if len(value) > 100:
-            print(f"  {key}: {value[:100]}...", file=sys.stderr)
-        else:
-            print(f"  {key}: {value}", file=sys.stderr)
-print("="*100, file=sys.stderr)
-print(f"DATABASE_URL present: {bool(os.environ.get('DATABASE_URL'))}", file=sys.stderr)
-print("="*100 + "\n", file=sys.stderr)
+# DEBUG: Write environment variables to a log file
+debug_log_path = os.path.join(BASE_DIR, 'django_startup_debug.log')
+try:
+    with open(debug_log_path, 'w') as f:
+        f.write("="*100 + "\n")
+        f.write(f"DJANGO STARTUP - All Environment Variables\n")
+        f.write("="*100 + "\n")
+        for key in sorted(os.environ.keys()):
+            value = os.environ[key]
+            if 'SECRET' in key or 'PASSWORD' in key or 'KEY' in key:
+                f.write(f"  {key}: ***REDACTED***\n")
+            else:
+                if len(value) > 100:
+                    f.write(f"  {key}: {value[:100]}...\n")
+                else:
+                    f.write(f"  {key}: {value}\n")
+        f.write("="*100 + "\n")
+        f.write(f"DATABASE_URL present: {bool(os.environ.get('DATABASE_URL'))}\n")
+        f.write(f"is_render: {is_render}\n")
+        f.write(f"is_production: {is_production}\n")
+        f.write("="*100 + "\n")
+except Exception as e:
+    pass  # Silent fail if we can't write the log
 
 # CRITICAL: Never read .env in Render or production
 env_file = os.path.join(BASE_DIR, '.env')
