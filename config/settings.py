@@ -73,20 +73,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database configuration
-if is_production:
-    # In Render, always use dj-database-url with DATABASE_URL
-    db_url = os.environ.get('DATABASE_URL')
-    print(f"\n{'='*80}")
-    print(f"PRODUCTION MODE (Render)")
-    print(f"DATABASE_URL present: {bool(db_url)}")
-    if db_url:
-        print(f"DATABASE_URL (first 60 chars): {db_url[:60]}...")
-    print(f"{'='*80}\n")
+db_url = os.environ.get('DATABASE_URL')
 
-    if db_url:
+print(f"\n{'='*80}")
+print(f"DATABASE CONFIGURATION DEBUG")
+print(f"is_render: {is_render}")
+print(f"is_production: {is_production}")
+print(f"DATABASE_URL in os.environ: {bool(db_url)}")
+if db_url:
+    print(f"DATABASE_URL (first 80 chars): {db_url[:80]}")
+print(f"{'='*80}\n")
+
+if db_url:
+    # Use dj-database-url to parse the PostgreSQL URL
+    try:
         DATABASES = {'default': dj_database_url.config(conn_max_age=600, conn_health_checks=True)}
-    else:
-        # Fallback to SQLite if DATABASE_URL is not set
+        print("[DB] Using PostgreSQL from DATABASE_URL via dj-database-url")
+    except Exception as e:
+        print(f"[DB ERROR] Failed to parse DATABASE_URL: {e}")
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
@@ -94,17 +98,14 @@ if is_production:
             }
         }
 else:
-    # Development: try .env first, then SQLite
-    db_url = os.environ.get('DATABASE_URL')
-    if db_url:
-        DATABASES = {'default': dj_database_url.config()}
-    else:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
+    # Fallback to SQLite
+    print("[DB] DATABASE_URL not found, using SQLite")
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
