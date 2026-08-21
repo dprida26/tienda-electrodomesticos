@@ -5,8 +5,11 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+is_render = 'RENDER' in os.environ
+is_production = os.environ.get('ENVIRONMENT') == 'production' or is_render
+
 env_file = os.path.join(BASE_DIR, '.env')
-if os.path.exists(env_file):
+if os.path.exists(env_file) and not is_production:
     environ.Env.read_env(env_file)
 
 env = environ.Env(
