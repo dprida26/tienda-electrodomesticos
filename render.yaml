@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: tienda-electrodomesticos-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: SECRET_KEY
+        sync: false
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com,localhost,127.0.0.1"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://*.onrender.com,http://localhost:3000,http://localhost:3001"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tienda-db
+          property: connectionString
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+
+  - type: pserv
+    name: tienda-db
+    env: postgres
+    plan: free
+    ipAllowList: []
+    envVars:
+      - key: POSTGRES_USER
+        value: tienda_user
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: POSTGRES_DB
+        value: tienda_db
